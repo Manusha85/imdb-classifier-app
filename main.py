@@ -101,7 +101,7 @@ st.write("""
 **Training Details:**
 - Dataset: IMDB Movie Reviews (25,000 training, 25,000 testing)
 - Vocabulary Size: 10,000 words
-- Sequence Length: 256
+- Sequence Length: 500
 - Training Time: ~85 seconds
 - Final Accuracy: 85%
 
@@ -115,3 +115,4 @@ st.info("""
 For the complete working version with real-time TensorFlow RNN predictions, 
 please run the application locally with all dependencies installed.
 """)
+
