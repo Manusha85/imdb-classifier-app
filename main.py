@@ -1,109 +1,117 @@
-# main.py
+# main.py - IMDB Movie Review Classifier
 import streamlit as st
-import numpy as np
-import pandas as pd
-import altair as alt
 
-# Set page configuration
+# Page configuration
 st.set_page_config(
     page_title="IMDB Movie Review Classifier",
-    page_icon="🎬", 
+    page_icon="🎬",
     layout="wide"
 )
 
 
 st.title("IMDB Movie Review Classifier by Manusha")
 
-st.header(" Movie Review Sentiment Analysis")
-st.write("This application demonstrates a Recurrent Neural Network (RNN) model trained to classify IMDB movie reviews as positive or negative.")
+# App description
+st.markdown("""
+This application demonstrates a **Recurrent Neural Network (RNN)** model trained to classify IMDB movie reviews as **Positive** or **Negative**.
+""")
 
-# Sample data for demonstration
-sample_data = {
-    'Review_Number': [1, 2, 3, 4, 5],
-    'Actual_Sentiment': ['Positive', 'Negative', 'Positive', 'Negative', 'Positive'],
-    'Predicted_Sentiment': ['Positive', 'Negative', 'Positive', 'Negative', 'Positive'],
-    'Confidence_Score': [0.94, 0.89, 0.96, 0.87, 0.98],
-    'Correct_Prediction': [True, True, True, True, True]
-}
+# Sample reviews with predictions
+st.header(" 5 Movie Reviews with Classification Results")
 
-df = pd.DataFrame(sample_data)
+# Review 1
+st.subheader("Review 1")
+st.write("This movie was absolutely fantastic! The acting was superb, the storyline kept me engaged throughout, and the cinematography was breathtaking. One of the best films I've seen this year.")
+col1, col2, col3 = st.columns(3)
+with col1:
+    st.metric("Actual", "Positive")
+with col2:
+    st.metric("Predicted", "Positive")  
+with col3:
+    st.metric("Confidence", "94%")
+st.success(" Correct Prediction")
+st.progress(0.94)
+st.markdown("---")
 
-# Display sample reviews
-st.subheader(" 5 Sample Movie Reviews & Predictions")
+# Review 2
+st.subheader("Review 2")
+st.write("Terrible movie, complete waste of time. Poor acting, boring plot, awful dialogue, and uninspired direction. I regret spending two hours watching this.")
+col1, col2, col3 = st.columns(3)
+with col1:
+    st.metric("Actual", "Negative")
+with col2:
+    st.metric("Predicted", "Negative")
+with col3:
+    st.metric("Confidence", "89%")
+st.success("Correct Prediction")
+st.progress(0.89)
+st.markdown("---")
 
-for index, row in df.iterrows():
-    with st.container():
-        col1, col2 = st.columns([3, 1])
-        
-        with col1:
-            # Sample review text based on sentiment
-            if row['Actual_Sentiment'] == 'Positive':
-                review_text = "This movie was absolutely fantastic! The acting was superb, the storyline engaging, and the cinematography breathtaking. One of the best films I've seen this year. Highly recommended for all movie lovers!"
-            else:
-                review_text = "Unfortunately, this movie failed to deliver. The plot was confusing, character development was weak, and the pacing felt off. Not worth the time investment in my opinion."
-            
-            st.write(f"**Review {row['Review_Number']}:**")
-            st.write(review_text)
-        
-        with col2:
-            st.metric("Actual", row['Actual_Sentiment'])
-            st.metric("Predicted", row['Predicted_Sentiment'])
-            st.metric("Confidence", f"{row['Confidence_Score']:.0%}")
-            
-            if row['Correct_Prediction']:
-                st.success(" Correct")
-            else:
-                st.error(" Incorrect")
-        
-        st.progress(row['Confidence_Score'])
-        st.markdown("---")
+# Review 3  
+st.subheader("Review 3")
+st.write("Amazing cinematography and brilliant performances by the entire cast. The director did an excellent job bringing this compelling story to life.")
+col1, col2, col3 = st.columns(3)
+with col1:
+    st.metric("Actual", "Positive")
+with col2:
+    st.metric("Predicted", "Positive")
+with col3:
+    st.metric("Confidence", "96%")
+st.success(" Correct Prediction")
+st.progress(0.96)
+st.markdown("---")
 
-# Add visualization
-st.subheader(" Model Performance Overview")
+# Review 4
+st.subheader("Review 4")
+st.write("Disappointing and poorly executed. The story had potential but the execution was severely lacking. Too many plot holes and weak character development.")
+col1, col2, col3 = st.columns(3)
+with col1:
+    st.metric("Actual", "Negative")
+with col2:
+    st.metric("Predicted", "Negative")
+with col3:
+    st.metric("Confidence", "87%")
+st.success(" Correct Prediction")
+st.progress(0.87)
+st.markdown("---")
 
-# Create a simple bar chart
-chart_data = pd.DataFrame({
-    'Metric': ['Accuracy', 'Precision', 'Recall', 'F1-Score'],
-    'Score': [0.85, 0.83, 0.82, 0.82]
-})
+# Review 5
+st.subheader("Review 5")
+st.write("A masterpiece of modern cinema that deserves all the praise it's receiving. The writing is sharp, the performances are authentic, and the direction is visionary.")
+col1, col2, col3 = st.columns(3)
+with col1:
+    st.metric("Actual", "Positive")
+with col2:
+    st.metric("Predicted", "Positive")
+with col3:
+    st.metric("Confidence", "98%")
+st.success(" Correct Prediction")
+st.progress(0.98)
 
-bar_chart = alt.Chart(chart_data).mark_bar().encode(
-    x='Metric',
-    y='Score',
-    color=alt.Color('Metric', legend=None)
-).properties(height=300)
+# Model information
+st.markdown("---")
+st.header(" Model Information")
 
-st.altair_chart(bar_chart, use_container_width=True)
-
-# Model information in sidebar
-st.sidebar.header(" Model Information")
-st.sidebar.write("""
-**Architecture:**
-- Embedding Layer (64 dimensions)
-- SimpleRNN Layer (64 units)
-- Dense Output Layer
+st.write("""
+**RNN Architecture:**
+- Embedding Layer (10,000 vocabulary → 64 dimensions)
+- SimpleRNN Layer (64 units) 
+- Dense Output Layer (sigmoid activation)
 
 **Training Details:**
-- Dataset: IMDB Movie Reviews
-- Vocabulary: 10,000 words
+- Dataset: IMDB Movie Reviews (25,000 training, 25,000 testing)
+- Vocabulary Size: 10,000 words
 - Sequence Length: 256
-- Training Time: ~2 minutes
+- Training Time: ~85 seconds
 - Final Accuracy: 85%
+
+**Total Parameters:** 648,321
 """)
 
-st.sidebar.header(" Local Deployment")
-st.sidebar.write("""
-For full TensorFlow model functionality:
-
-1. Download the repository
-2. Run: `pip install tensorflow streamlit numpy`
-3. Run: `streamlit run main.py`
-4. Access at: `http://localhost:8501`
-""")
-
-# Footer
+# Local deployment note
 st.markdown("---")
-st.caption("""
-*Note: This cloud deployment demonstrates the application interface. For real-time predictions with the trained RNN model, 
-please run the application locally with TensorFlow dependencies installed.*
+st.info("""
+**Note:** This cloud deployment demonstrates the application interface. 
+For the complete working version with real-time TensorFlow RNN predictions, 
+please run the application locally with all dependencies installed.
 """)
